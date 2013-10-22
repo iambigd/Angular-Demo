@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="toDo">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>Hello Angular</title>
+  <script>
+    var toDoModule = angular.module('toDo', []);
+    //Set up our mappings between URLs, tempaltes. and  controllers
+    function toDoRouteConfig($routeProvider){
+        $routeProvider.
+        when('/', {
+            controller: ListController,
+            templateUrl: 'route-list.html'
+        }).
+        
+        when('/detail/:label', {
+            controller: DetailController,
+            templateUrl: 'route-detail.html'
+        }).
+        otherwise({
+            redirectTo: '/'
+        });
+    };
+
+    //Set up our route so the AMailservice can find it
+    toDoModule.config(toDoRouteConfig);
+
+    var toDoData =  [{label:"解bug"},{label:"開會"}];
+
+    function ListController($scope){
+        console.log("list page");
+        $scope.todoList = toDoData;
+    }
+
+    function DetailController($scope, $routeParams){
+        console.log("detail page:" + $routeParams.label);
+        $scope.selectedLabel = $routeParams.label;
+
+        
+    }
+
+  </script>
+</head>
+<body>
+<h1>Route Demo</h1>
+<div ng-view></div>
+</body>
+</html>
+

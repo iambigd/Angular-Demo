@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html >
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>巢狀controller.html</title>
+</head>
+<body ng-app>
+    <div ng-controller="CarController">
+    My name is {{ name }} and I am a {{ type }}
+     
+    <div ng-controller="BMWController">
+        My name is {{ name }} and I am a {{ type }}
+ 
+        <div ng-controller="BMWMotorcycleController">
+            My name is {{ name }} and I am a {{ type }}
+ 
+        </div>
+    </div>
+</div>
+ 
+<script>
+function CarController($scope) {
+ 
+    $scope.name = 'Car';
+    $scope.type = 'Car';
+ 
+}
+ 
+function BMWController($scope) {
+ 
+    $scope.name = 'BMW';
+ 
+}
+ 
+function BMWMotorcycleController($scope) {
+ 
+    $scope.name = 'BMWMotorade';
+    $scope.type = 'Motorcycle';
+ 
+}
+ 
+ 
+</script>
+</body>
+</html>
+

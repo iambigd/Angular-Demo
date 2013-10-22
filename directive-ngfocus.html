@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>Hello Angular</title>
+  <script>
+    function SomeController($scope) {
+        $scope.message = { text: 'nothing clicked yet' };
+
+        $scope.clickUnfocused = function() {
+            $scope.message.text = 'unfocused button clicked';
+        };
+
+        $scope.clickFocused = function (){
+            $scope.message.text = 'focus button clicked';
+        };
+    }
+
+    var appModule = angular.module('app', []);
+    appModule.directive('ngbkFocus', function(){
+        return {
+            link: function(scope, elements, attrs, controller){
+                elements[0].focus();
+            }
+        };
+    })
+  </script>
+</head>
+<body ng-controller="SomeController">
+            <button ng-click="clickUnfocused()">
+                Not focused
+            </button>
+            <button ngbk-focus ng-click="clickFocused()">
+                I'm very focused!
+            </button>
+            <div>{{message.text}}</div>
+        </body>
+</html>
+

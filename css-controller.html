@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>Angular css操作: ng-class</title>
+  <style>
+    .pending-delete { background-color: pink }
+  </style>
+  <script>
+    var myApp = angular.module('myApp', []);
+
+    function MyCtrl($scope) {
+        $scope.items = [
+            {
+            name: 'Misko',
+            title: 'Angular creator'},
+            {
+            name: 'Igor',
+            title: 'Meetup master'},
+            {
+            name: 'Vojta',
+            title: 'All-around superhero'}
+
+        ];
+    }
+  </script>
+</head>
+<body>
+    <div ng-controller="MyCtrl" ng-style="{color: myColor}">
+
+    <input type="text" ng-model="myColor" placeholder="enter a color name">
+
+    <div ng-repeat="item in items" ng-class="{'pending-delete': item.checked}">
+      name: {{item.name}}, {{item.title}}
+        <input type="checkbox" ng-model="item.checked"> <spen ng-show="item.checked">(will be deleted)</span>
+   </div>
+   <p>
+   <div ng-hide="myColor== 'red'">I will hide if the color is set to 'red'.</div>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>檔案管理</title>
+</head>
+<style>
+.selected { background-color: pink }
+</style>
+
+<script type="text/javascript" >
+
+function ObjectListCrtl($scope,$filter) {
+
+    $scope.objectList = 
+        [ 
+            {name:'text.txt',isFolder:false,format:'txt',checked:false},
+            {name:'IamFolder',isFolder:true, format:'',checked:false},
+            {name:'IamPicture.png',isFolder:true, format:'png',checked:false}
+
+        ];
+
+    $scope.actionDel = false;
+    $scope.actionRename = false;
+    $scope.actionPreview = false;
+    $scope.actionMove = false;
+    $scope.actionCopy = false;
+    $scope.actionDownload = false;
+
+    $scope.checkedObject = function(object){
+        console.log("click checkbox");
+        //current click object
+        var currSelectedObject = object;
+        if(object.checked){
+            object.checked = false;
+        }else{
+            object.checked = true;
+        }   
+        $scope.selectedObject(object);
+    };
+
+    $scope.selectedObject = function(object){
+        console.log("selected obj");
+
+        //current click object
+        var currSelectedObject = object;
+
+        console.log(currSelectedObject);
+
+        if(currSelectedObject.editing){
+            return ;
+        }
+        
+        if(object.checked){
+            object.checked = false;
+        }else{
+            object.checked = true;
+        }   
+       
+        //get selected objects
+        $scope.selectedObjs = $scope.getSelectedObjects();
+        //get count
+        var selectedCount = $scope.selectedObjs.length;
+        console.log("selected count:" + selectedCount);
+        if(selectedCount == 1){
+            //最後一個物件不一定是當前
+            var finalObj = $scope.getSelectedObjects()[0];
+
+            $scope.actionDel = true;
+            $scope.actionRename = true;
+            $scope.actionMove = true;
+            $scope.actionCopy = true;
+
+            if(finalObj.format == "png"){
+                $scope.actionPreview = true;
+            }else{
+                $scope.actionPreview = false;
+            }
+
+            if(!finalObj.isFolder){
+                $scope.actionDownload = true;
+            }
+
+        }else if(selectedCount > 1){
+
+            $scope.actionDel = true;
+            $scope.actionRename = false;
+            $scope.actionMove = true;
+            $scope.actionCopy = true;
+            $scope.actionPreview = false;
+            $scope.actionDownload = false;
+
+        }else{
+
+            $scope.actionDel = false;
+            $scope.actionRename = false;
+            $scope.actionPreview = false;
+            $scope.actionMove = false;
+            $scope.actionCopy = false;
+            $scope.actionDownload = false;
+        }
+
+    };
+
+    $scope.getSelectedObjects = function(){
+        var selectedObjs = $filter("filter")($scope.objectList, {checked: true})
+        // console.log("selected objs as below:");
+        // console.log(selectedObjs);
+        return selectedObjs;
+    };
+
+    $scope.enableRenameObject = function(oject){
+        console.log("enable rename");
+        var renameObj = $scope.getSelectedObjects()[0];
+        renameObj.editing = true;
+    }
+
+    $scope.renameObject = function(object){
+        delete object.editing;
+    }
+
+    $scope.cancelRenameObject = function(object){
+        delete object.editing;
+    };
+
+    $scope.deleteObjects = function(){
+        console.log("delete objs");
+        console.log($scope.selectedObjs);
+        //delete api callback
+    };
+
+    $scope.previewObject = function(){
+        console.log("preview obj");
+        var imgObject = $scope.getSelectedObjects()[0];
+        console.log(imgObject);
+        alert("preview img:" + imgObject.name);
+    };
+}
+</script>
+<body ng-controller="ObjectListCrtl">
+    <h1>File Manager</h1>
+    selected items:  {{getSelectedObjects() | json}}
+    <div >
+        <button ng-show="actionDel" ng-click="deleteObjects()">Delete</button>
+        <button ng-show="actionRename" ng-click="enableRenameObject()">Rename</button>
+        <button ng-show="actionPreview" ng-click="previewObject()">Preview</button>
+        <button ng-show="actionMove">Move</button>
+        <button ng-show="actionCopy">Copy</button>
+        <button ng-show="actionDownload">Download</button>
+    </div>
+    <div >
+        <ul>
+        <li ng-repeat="object in objectList">
+
+            <input type="checkbox" ng-model="object.checked"  
+            ng-click="checkedObject(object)" / >
+            
+            <div 
+            ng-model="object.checked" 
+            ng-click="selectedObject(object)"
+            ng-class="{'selected': object.checked}">
+
+            <span ng-hide="object.editing">{{object.name}}</span>
+            <div ng-show="object.editing">
+                <input type="text" value="{{object.name }}" ng-model="object.name">
+                <button ng-click="renameObject(object)">儲存</button>
+                <button ng-click="cancelRenameObject(object)">取消</button>
+            </div>
+            </div>
+        </li>  
+      </ul>
+    </div>
+</body>
+</html>
+</html>
+

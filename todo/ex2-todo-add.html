@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>to do with add</title>
+</head>
+<script type="text/javascript" >
+
+function TodoCrtl($scope) {
+//AngularJS在建立應用程式時，會產生一個物件，用來代表應用程式的Model，
+//而這個Model就是上面Controller注入的 $scope。
+  console.log($scope);
+  $scope.newItem = "";
+  $scope.todoList = [{label:"解bug"},{label:"開會"}];
+
+  $scope.addItem = function(){
+    if(this.newItem){
+       this.todoList.push({label:this.newItem});
+       this.newItem = '';
+    }  
+  }
+
+}
+</script>
+<body ng-controller="TodoCrtl">
+    <h1>Todo List</h1>
+      <form ng-submit="addItem()">
+        <input type="text" ng-model="newItem" name="newItem" />
+        <input type="submit" id="submit" value="新增" />
+      </form>
+      <ul>
+        <!--用ng-repeat印出model的資料-->
+        <li ng-repeat="item in todoList">{{item.label}}</li>  
+      </ul>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+    
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <script src="http://codeorigin.jquery.com/jquery-1.10.2.min.js"></script>
+
+  <meta charset=utf-8 />
+  <title>透過Directive綁定onfocus/onblur</title>
+  <script>
+  var myApp = angular.module('myApp', []);
+
+    myApp.directive('ngHasfocus', function() {
+        return function(scope, element, attrs) {
+          
+            scope.$watch(attrs.ngHasfocus, function (nVal, oVal) {
+                if (nVal){
+                    console.log('element as below:');
+                    console.log(element[0]);
+                    element[0].focus();
+
+                    //jquery
+                    $(element[0]).select();
+                }
+                   
+            });
+            
+            element.bind('blur', function() {
+                scope.$apply(attrs.ngHasfocus + " = false");
+            });
+            
+            element.bind('keydown', function (e) {
+                if (e.which == 13)
+                    scope.$apply(attrs.ngHasfocus + " = false");
+            });
+        }
+    });
+  </script>
+</head>
+<body>
+
+    <div ng-init="editable = false; name='Superhero'">
+    Your name is <b ng-hide="editable" ng-click="editable=true">{{name}}.</b>
+    <input ng-show="editable" ng-hasfocus="editable" ng-model="name"></input>
+    Click to edit it!
+    </div>
+    
+
+</body>
+</html>
+

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<!--
+宣告式語法 (Directives)，
+一份html只能有一個ng-app
+-->
+<html ng-app>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>Hello Angular</title>
+</head>
+<body>
+    <h1>Hello World</h1>
+    <!--Angular 表達式會用 {{ 與 }} 包起來
+    ng-model（作為資料綁定、可以雙向互動的資料模型
+    -->
+    <p>AngularJs say hello to {{yourName || 'everyone'}}!</p>
+      <label>輸入你的姓名，Angular會跟你打招呼</label>
+      <input type="text" ng-model="yourName" />
+</body>
+</html>
