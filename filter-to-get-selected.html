@@ -3,7 +3,7 @@
 <head>
 <script src="http://cdnjs.cloudflare.com/ajax/libs/angular.js/1.0.7/angular.min.js"></script>
 <meta charset=utf-8 />
-<title>取得被選取的項目</title>
+<title>使用filter取得被選取的項目</title>
 <script>
 function MyCtrl($scope, $filter) {
   // fruits
@@ -13,7 +13,7 @@ function MyCtrl($scope, $filter) {
     { name: 'pear',     checked: true },
     { name: 'naartjie', checked: false }
   ];
-  
+
   $scope.selectedFruits = function () {
     return $filter('filter')($scope.fruits, {checked: true});
   };
@@ -22,6 +22,7 @@ function MyCtrl($scope, $filter) {
 </head>
 <body ng-app>
   <div ng-controller="MyCtrl">
+  	請選擇水果
     <label ng-repeat="fruit in fruits">
       <input
         type="checkbox"
@@ -29,21 +30,21 @@ function MyCtrl($scope, $filter) {
         ng-checked="fruit.checked"
         ng-model="fruit.checked"
       >
-      
      <span>{{fruit.name}}</span>
     </label>
-  
+
     <pre>
-      <strong>selected with filter:</strong> 
+      <h2>selected with filter:</h2>
       {{fruits | filter:{checked:true} | json}}
     </pre>
+
     <pre>
-      <strong>selected with helper function:</strong> 
+      <h2>selected with helper function:</h2>
       <!--執行一個function-->
       {{selectedFruits() | json}}
     </pre>
     <pre>
-        <strong>all fruits:</strong>
+        <h2>all fruits:</h2>
          {{fruits | json}}
     </pre>
   </div>

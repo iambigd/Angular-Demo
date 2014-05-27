@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
+  <meta charset=utf-8 />
+  <title>練習一下NG裡面提供的Serivces</title>
+  <script>
+	var myApp = angular.module('myApp',[]);
+
+
+
+	myApp.factory('SerivceShareData',function(){
+	  return {message: 'SerivceShareData from a service'};
+	});
+
+	//希望設定的值不要被改變
+	myApp.constant('fooConfigConstant', {
+
+		config1: true,
+
+		config2: "Default config2"
+
+	});
+
+	myApp.value('fooConfigValue', {
+
+		config1: true,
+
+		config2: "Default config2"
+
+	});
+
+	//使用factory回傳一個物件實例
+	myApp.factory('fooFactory',function(){
+		var _priveteMessage = "private foo message";
+
+		var getPrivateMessage = function(){
+			return _priveteMessage;
+		};
+
+  		return {
+  			message: "public foo message",
+  			getPrivateMessage: getPrivateMessage
+  		};
+	});
+
+	//你可以這樣寫!!
+	// myApp.factory('fooFactory',function(){
+
+	// 	function  FooObj (){
+	// 		var foo = this;
+	// 		var _priveteMessage = "private foo message";
+
+	// 		foo.message = "public foo message";
+
+	// 		foo.getPrivateMessage = function(){
+	// 			return _priveteMessage;
+	// 		};
+	// 	};
+
+	// 	return new FooObj();
+	// });
+
+
+	//其工作原理與factory一樣，
+	//只是在第一次被呼叫時，
+	//angular會使用new fooService()來初始化這個對像
+	myApp.service('fooService',function(){
+
+		var serviceObj = this;
+
+		var _priveteMessage = "private foo message";
+
+		serviceObj.message = "public foo message";
+
+		serviceObj.getPrivateMessage = function(){
+			return _priveteMessage;
+		};
+
+		serviceObj.setPrivateMessage = function(newMsg){
+			_priveteMessage = newMsg;
+		};
+	});
+
+	myApp.provider('fooProvider', function() {
+	  var _priveteMessage = "private foo message";
+
+	  return {
+
+	    setPrivateMessage: function(newMsg) {
+	      _priveteMessage = newMsg;
+	    },
+
+	    $get: function() {
+
+		    function getPrivateMessage() {
+		       return _priveteMessage;
+		    };
+
+		    return {
+	  			message: "public foo message",
+	  			getPrivateMessage: getPrivateMessage
+	  		};
+
+	    }
+
+	  };
+
+	});
+
+	myApp.controller('MyConstant', function($scope, fooConfigConstant) {
+  		$scope.fooConfig = fooConfigConstant;
+  		//說是不變的常數，但是覆寫還是不會有錯XD
+  		// angular.extend(fooConfigConstant, {config3: "I have been extended"});
+	});
+
+	myApp.controller('MyValue', function($scope, fooConfigValue) {
+  		$scope.fooConfig = fooConfigValue;
+  		angular.extend(fooConfigValue, {config3: "I have been extended"});
+	});
+
+	myApp.controller('MyFactory', function($scope, fooFactory) {
+  		$scope.fooConfig = fooFactory;
+
+	});
+
+	myApp.controller('MyService', function($scope, fooService) {
+  		$scope.fooConfig = fooService;
+	});
+
+	myApp.controller('MyProvider', function($scope, fooProvider) {
+  		$scope.fooConfig = fooProvider;
+	});
+
+	myApp.config(function(fooProvider) {
+		console.log(fooProvider);
+  		// fooProvider.setPrivateMessage('New message from config');
+	});
+
+  </script>
+</head>
+<body>
+<div ng-controller="MyConstant">
+	<h2>印出constant</h2>
+	config1: {{fooConfig.config1}}
+    <br />
+    config2: {{fooConfig.config2}}
+     <br />
+    config3: {{fooConfig.config3}}
+</div>
+
+<div ng-controller="MyValue">
+	<h2>印出Value</h2>
+	config1: {{fooConfig.config1}}
+    <br />
+    config2: {{fooConfig.config2}}
+     <br />
+    config3: {{fooConfig.config3}}
+</div>
+
+<div ng-controller="MyFactory">
+	<h2>印出Factory</h2>
+	public message: {{fooConfig.message}}
+    <br />
+    get privete message: {{fooConfig.getPrivateMessage()}}
+     <br />
+
+</div>
+
+<div ng-controller="MyService">
+	<h2>印出Services</h2>
+	public message: {{fooConfig.message}}
+    <br />
+    get privete message: {{fooConfig.getPrivateMessage()}}
+     <br />
+
+</div>
+
+<div ng-controller="MyProvider">
+	<h2>印出Provider</h2>
+	public message: {{fooConfig.message}}
+    <br />
+    get privete message: {{fooConfig.getPrivateMessage()}}
+     <br />
+
+</div>
+
+</body>
+</html>
+
